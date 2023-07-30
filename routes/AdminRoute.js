@@ -1,6 +1,7 @@
 const AdminRoute = require('express').Router()
 const asyncHandler = require('express-async-handler')
 const Admin = require("../models/AdminModel")
+const User = require('../models/UserModel')
 const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
@@ -138,8 +139,38 @@ AdminRoute.get('/admin/user',verifyAdmin, asyncHandler(async(req, res) => {
 
 
 
+AdminRoute.put('/admin/update_member_status/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+try {
+    const {id} = req.params
+
+    await User.findByIdAndUpdate(id, req.body, {new: true})
+
+    res.json({msg: "user's role has been updated.."})
+
+    
+} catch (error) {
+    next(error)
+}
+
+}))
 
 
+AdminRoute.delete('/admin/delete_member/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+    try {
+
+        const {id} = req.params
+
+        await User.findByIdAndDelete(id)
+
+        res.json({msg: "user has been successfully deleted..."})
+        
+    } catch (error) {
+        next(error)
+    }
+
+}))
 
 
 const createAccessToken = (admin) =>{
