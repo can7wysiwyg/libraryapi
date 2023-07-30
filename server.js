@@ -6,6 +6,7 @@ const port  = process.env.PORT || 5500
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
+const AdminRoute = require('./routes/AdminRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -28,6 +29,10 @@ db.once('open', function(){
     useTempFiles: true
 }))
   
+
+// apis
+
+app.use(AdminRoute)
 
 
 
