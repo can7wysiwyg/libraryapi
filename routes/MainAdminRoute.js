@@ -92,7 +92,7 @@ cloudinary.config({
 
       res.cookie('refreshtoken', refreshtoken, { expire: new Date() + 9999 });
 
-      jwt.verify(refreshtoken, process.env.REFRESH_TOKEN_ADMIN, (err, admin) =>{
+      jwt.verify(refreshtoken, process.env.REFRESH_TOKEN_MAIN_ADMIN, (err, mainadmin) =>{
         if(err) return res.status(400).json({msg: "Email the admin for help.."})
     
         const accesstoken = createAccessToken({id: mainadmin.id})
@@ -111,9 +111,9 @@ cloudinary.config({
 }))
 
 
-MainAdminAdminRoute.get('/mainadmin/user', verifyMainAdmin, asyncHandler(async(req, res) => {
+MainAdminRoute.get('/mainadmin/user', verifyMainAdmin, asyncHandler(async(req, res) => {
   try{
-    const mainadmin = await Admin.findById(req.mainadmin).select('-password')
+    const mainadmin = await MainAdmin.findById(req.mainadmin).select('-password')
     if(!mainadmin) return res.status(400).json({msg: "this admin does not exist d does not exist."})
   
     res.json(mainadmin)

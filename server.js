@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const AdminRoute = require('./routes/AdminRoute')
+const MainAdminRoute = require('./routes/MainAdminRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -33,6 +34,7 @@ db.once('open', function(){
 // apis
 
 app.use(AdminRoute)
+app.use(MainAdminRoute)
 
 
 
