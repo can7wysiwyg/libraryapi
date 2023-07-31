@@ -1,5 +1,6 @@
 const MainAdminRoute = require('express').Router()
 const MainAdmin = require('../models/MainAdminModel')
+const Admin = require('../models/AdminModel')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
@@ -132,8 +133,63 @@ MainAdminRoute.get('/mainadmin/user', verifyMainAdmin, asyncHandler(async(req, r
   }))
 
 
+MainAdminRoute.put('/mainadmin/make_admin/:id', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
+
+    try {
+
+        const {id} = req.params
+       
+        if(!id) res.json({msg: "user cannot be empty..."})
+
+        await Admin.findByIdAndUpdate(id, req.body, {new: true} )
+
+        res.json({msg: "admin status has successfully been changed"})
 
 
+
+        
+    } catch (error) {
+        next(error)
+    }
+
+
+}))
+
+
+MainAdminRoute.put('/mainadmin/suspend_admin/:id', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
+
+    try {
+        
+ const {id} = req.params
+
+ if(!id) res.json({msg: "no admin has been selected"})
+
+
+ await Admin.findByIdAndUpdate(id, req.body, {new: true})
+
+ res.json({msg: "admin account status has been successfully updated"})
+
+
+
+    } catch (error) {
+        next(error)
+    }
+
+}))
+
+
+MainAdminRoute.delete('/mainadmin/delete_admin/:id', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
+    try {
+        const {id} = req.params
+
+        if(!id) res.json({msg: "admin has not been selected"})
+
+        await Admin.findByIdAndDelete(id)
+        
+    } catch (error) {
+        next(error)
+    }
+}))
 
 
 

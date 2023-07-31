@@ -25,6 +25,10 @@ adminImage: {
 admin: {
     type: Number,
     default: 0
+},
+accountStatus: {
+    type: Boolean,
+    default: true
 }
 
 

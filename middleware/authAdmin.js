@@ -10,7 +10,7 @@ const authAdmin = asyncHandler(async(req, res, next) => {
 
     
 
-    if(admin.admin === 0 ) return res.json({msg: "you are not an admin"})
+    if(admin.admin !== 1 ) return res.json({msg: "you are not an admin"})
 
     next()
 
