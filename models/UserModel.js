@@ -28,9 +28,30 @@ const UserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    password: {
+      type: String,
+      required: true
+
+    },
+    idNumber: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function (v) {
+          return v.length <= 8;
+        },
+        message: props => `ID number must not exceed 8 characters!`
+      }
+    },
+    
+    permToBorrow: {
+      type: Boolean,
+      default: false
+
+    },
     role: {
       type: Number,
-      default: 0
+      default: 1
     }
   },
   {
