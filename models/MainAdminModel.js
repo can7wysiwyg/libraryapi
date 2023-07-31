@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const AdminSchema = mongoose.Schema({
+const MainAdminSchema = mongoose.Schema({
 
 fullname: {
     type: String,
@@ -17,18 +17,18 @@ password: {
     unique: true,
     required: true
 },
-adminImage: {
+mainAdminImage: {
     type: String,
     unique: true,
     required: true
 },
 admin: {
     type: Number,
-    default: 0
+    default: 2
 }
 
 
 }, {timestamps: true})
 
 
-module.exports = mongoose.model('Admin', AdminSchema)
+module.exports = mongoose.model('MainAdmin', MainAdminSchema)
