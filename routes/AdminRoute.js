@@ -173,6 +173,13 @@ AdminRoute.delete('/admin/delete_member/:id', verifyAdmin, authAdmin, asyncHandl
 }))
 
 
+
+AdminRoute.get('/admin/viewws', verifyAdmin, authAdmin, asyncHandler(async(req, res) => {
+
+  res.json({msg: "total freedom"})
+}))
+
+
 const createAccessToken = (admin) =>{
     return jwt.sign(admin, process.env.ACCESS_TOKEN_ADMIN, {expiresIn: '14d'})
   }
