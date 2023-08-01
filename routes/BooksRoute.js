@@ -3,7 +3,7 @@ const BookRoute = require('express').Router()
 const asyncHandler = require('express-async-handler')
 const Admin = require('../models/AdminModel')
 const Book = require('../models/BookModel')
-const verifyAdmin = require('../middleware/verifyMainAdmin')
+const verifyAdmin = require('../middleware/verifyAdmin')
 const authAdmin = require('../middleware/authAdmin')
 const cloudinary = require('cloudinary').v2
 const fs = require('fs')
@@ -57,6 +57,7 @@ try {
           bookGenre,
           bookReleaseDate,
           bookTitle,
+          bookISBN,
           bookImage: result.secure_url,
         }); 
   

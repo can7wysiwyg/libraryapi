@@ -10,6 +10,8 @@ const AdminRoute = require('./routes/AdminRoute')
 const MainAdminRoute = require('./routes/MainAdminRoute')
 const UserRoute = require('./routes/UserRoute')
 const BorrowRoute = require('./routes/BorrowRoute')
+const GenreRoute = require('./routes/GenreRoute')
+const BookRoute = require('./routes/BooksRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -39,6 +41,8 @@ app.use(AdminRoute)
 app.use(MainAdminRoute)
 app.use(UserRoute)
 app.use(BorrowRoute)
+app.use(GenreRoute)
+app.use(BookRoute)
 
 
 
