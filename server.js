@@ -9,6 +9,7 @@ const fileUpload = require('express-fileupload')
 const AdminRoute = require('./routes/AdminRoute')
 const MainAdminRoute = require('./routes/MainAdminRoute')
 const UserRoute = require('./routes/UserRoute')
+const BorrowRoute = require('./routes/BorrowRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -37,6 +38,7 @@ db.once('open', function(){
 app.use(AdminRoute)
 app.use(MainAdminRoute)
 app.use(UserRoute)
+app.use(BorrowRoute)
 
 
 

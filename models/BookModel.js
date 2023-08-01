@@ -22,7 +22,16 @@ bookAuthor: {
 bookGenre: {
     type: String,
     required: true
-}
+},
+
+bookDescription: {
+    type: String,
+    required: true
+},
+bookReleaseDate: {
+    type: String,
+    required: true
+},
 
 
 }, {
