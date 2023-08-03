@@ -12,6 +12,7 @@ const UserRoute = require('./routes/UserRoute')
 const BorrowRoute = require('./routes/BorrowRoute')
 const GenreRoute = require('./routes/GenreRoute')
 const BookRoute = require('./routes/BooksRoute')
+const CardRoute = require('./routes/CardRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -43,6 +44,7 @@ app.use(UserRoute)
 app.use(BorrowRoute)
 app.use(GenreRoute)
 app.use(BookRoute)
+app.use(CardRoute)
 
 
 

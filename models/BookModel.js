@@ -19,6 +19,11 @@ bookAuthor: {
     type: String,
     required: true
 },
+bookFile: {
+    type: String,
+    required: true
+
+},
 bookGenre: {
     type: String,
     required: true

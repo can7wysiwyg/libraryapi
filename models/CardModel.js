@@ -4,18 +4,15 @@ const CardSchema = mongoose.Schema({
 
     bookOne: {
         type: String,
-        required: true,
-        unique: true
+        
     },
     bookTwo: {
         type: String,
-        required: true,
-        unique: true
+        
     },
     bookThree: {
         type: String,
-        required: true,
-        unique: true
+        
     },
     borrower: {
         type: String,
@@ -24,8 +21,12 @@ const CardSchema = mongoose.Schema({
     token: {
         type: String,
         required: true
+    },
+    hasBorrowedBooks: {
+        type: Boolean,
+        default: false
     }
-
+    
 }, {
     timestamps: true
 })

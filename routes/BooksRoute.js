@@ -33,39 +33,41 @@ try {
 
     if(!bookReleaseDate) res.json({msg: "book release date cannot be empty"})
 
-
-    if (!req.files || !req.files.bookImage) {
+    
+    if (!req.files || !req.files.bookImage || !req.files.bookFile) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
     
-      const file = req.files.bookImage;
-
-      cloudinary.uploader.upload(file.tempFilePath, {
-        folder: 'testImage',
-        width: 150,
-        height: 150,
-        crop: "fill"
-      }, async (err, result) => {
-        if (err) throw err;
-    
-        removeTmp(file.tempFilePath);
-
-
-        await Book.create({
-          bookAuthor,
-          bookDescription,
-          bookGenre,
-          bookReleaseDate,
-          bookTitle,
-          bookISBN,
-          bookImage: result.secure_url,
-        }); 
-  
-        res.json({ msg: "book has been successfully created!" });
-    
+      
+      const bookFileResult = await cloudinary.uploader.upload(req.files.bookFile.tempFilePath, {
+        resource_type: 'auto', // Set resource type to "auto" to handle different file types
       });
-
-
+  
+      
+      const bookImageResult = await cloudinary.uploader.upload(req.files.bookImage.tempFilePath);
+  
+      const bookCol = new Book({
+        bookAuthor,
+        bookDescription,
+        bookGenre,
+        bookISBN,
+        bookReleaseDate,
+        bookTitle,
+        bookFile: bookFileResult.secure_url,
+        bookImage: bookImageResult.secure_url,
+      });
+  
+      await bookCol.save();
+  
+      // Delete the audio and image files from the temporary uploads folder
+      fs.unlinkSync(req.files.bookFile.tempFilePath);
+      fs.unlinkSync(req.files.bookImage.tempFilePath);
+  
+      res.json({
+        msg: 'Audio and image files uploaded successfully',
+        audio: bookCol,
+      });
+  
 
 
 
@@ -139,6 +141,51 @@ try {
 }
 
 }))
+
+
+BookRoute.put('/books/update_pdf/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+  try {
+    const { id } = req.params;
+  
+        const book = await Book.findById(id);
+  
+        if (!book) {
+          return res.status(404).json({ msg: "Book not found." });
+        }
+  
+        if (book.bookFile) {
+          const publicId = book.bookFile.split("/").pop().split(".")[0];
+          await cloudinary.uploader.destroy(publicId);
+        }
+  
+        if (!req.files || Object.keys(req.files).length === 0) {
+          return res.status(400).json({ msg: "No file uploaded." });
+        }
+  
+        const bookFile = req.files.bookFile;
+  
+        const result = await cloudinary.uploader.upload(bookFile.tempFilePath);
+  
+        book.bookFile = result.secure_url;
+  
+        await book.save();
+  
+        fs.unlinkSync(bookFile.tempFilePath);
+  
+        res.json({ msg: " updated successfully." });
+  
+  
+  
+    
+  } catch (error) {
+    next(error)
+  }
+  
+  }))
+  
+
+
 
 BookRoute.delete('/books/delete_book/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
   try {

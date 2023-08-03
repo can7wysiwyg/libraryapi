@@ -5,48 +5,74 @@ const verify = require('../middleware/verify');
 const ableToBorrow = require('../middleware/ableToBorrow');
 const asyncHandler = require('express-async-handler');
 
-const bookAccessToken = (horcrux) => {
-  return jwt.sign(horcrux, process.env.BOOK_ACCESS_TOKEN, { expiresIn: '30d' });
-};
 
-const createRefreshToken = (horcrux) => {
-  return jwt.sign(horcrux, process.env.BOOK_REFRESH_TOKEN, { expiresIn: '30d' });
+const bookAccessToken = (horcrux) => {
+  return jwt.sign(horcrux, process.env.BOOK_ACCESS_TOKEN, { expiresIn: '1min' });
 };
 
 const getAccessTokenFromDB = async (userId) => {
   try {
-    const card = await Card.findOne({ borrower: userId });
-    return card ? card.token : null;
+    const accessToken = await Card.findOne({ borrower: userId }, {}, { sort: { createdAt: -1 } });
+    return accessToken ? accessToken.token : null;
   } catch (error) {
     throw new Error('Error fetching access token from the database.');
   }
 };
 
 
-BorrowRoute.post('/borrow/borrow_books', verify, ableToBorrow, asyncHandler(async (req, res, next) => {
+
+
+const canBorrow = async (req, res, next) => {
+  const { id } = req.params;
+  const accessToken = await getAccessTokenFromDB(id);
+
   try {
-    const { bookOne, bookTwo, bookThree, borrower } = req.body;
+  
+    const decodedAccessToken = jwt.verify(accessToken, process.env.BOOK_ACCESS_TOKEN);
 
     
-    const accessToken = bookAccessToken({ books: [bookOne, bookTwo, bookThree], borrower });
+    const userHasBorrowedBooks = await Card.exists({ borrower: id, hasBorrowedBooks: true });
+    if (userHasBorrowedBooks && decodedAccessToken) {
+      return res.json({ msg: "cannot borrow" });
+    }
 
     
+    next();
+  } catch (error) {
     
-    const card = await Card.create({
+    next();
+  }
+};
+
+
+
+BorrowRoute.post('/borrow/borrow_books/:id', verify, ableToBorrow, canBorrow, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { bookOne, bookTwo, bookThree, borrower } = req.body;
+  const ccessToken = bookAccessToken({ books: [bookOne, bookTwo, bookThree], borrower });
+
+  try {
+    
+    Card.create({
       bookOne,
       bookTwo,
       bookThree,
-      borrower,
-      token: accessToken,
+      borrower: id,
+      token: ccessToken,
+      hasBorrowedBooks: true,
     });
 
-    
-    res.json({ msg: 'Successfully borrowed',  });
-
+    res.json({ msg: 'Successfully borrowed' });
   } catch (error) {
-    next(error);
+    return res.status(500).json({ msg: 'Error creating card.' });
   }
 }));
+
+
+
+
+
+
 
 
 BorrowRoute.get('/borrow/view_book/:id', verify, ableToBorrow, asyncHandler(async (req, res, next) => {
@@ -87,6 +113,11 @@ BorrowRoute.get('/borrow/view_book/:id', verify, ableToBorrow, asyncHandler(asyn
     next(error);
   }
 }));
+
+
+
+
+
 
 
 
