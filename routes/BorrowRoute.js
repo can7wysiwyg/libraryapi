@@ -7,7 +7,7 @@ const asyncHandler = require('express-async-handler');
 
 
 const bookAccessToken = (horcrux) => {
-  return jwt.sign(horcrux, process.env.BOOK_ACCESS_TOKEN, { expiresIn: '1min' });
+  return jwt.sign(horcrux, process.env.BOOK_ACCESS_TOKEN, { expiresIn: '30d' });
 };
 
 const getAccessTokenFromDB = async (userId) => {
@@ -113,12 +113,6 @@ BorrowRoute.get('/borrow/view_book/:id', verify, ableToBorrow, asyncHandler(asyn
     next(error);
   }
 }));
-
-
-
-
-
-
 
 
 
