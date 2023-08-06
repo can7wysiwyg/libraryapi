@@ -1,12 +1,13 @@
 const CardRoute = require('express').Router()
 const Card = require('../models/CardModel')
-const UserDeletedBook = require('../models/UserDeletedBooksModel')
 const asyncHandler = require('express-async-handler')
-const verifyMaidAdmin = require('../middleware/verifyMainAdmin')
-const mainAdmin = require('../middleware/mainAdmin')
 const verify = require('../middleware/verify')
 const ableToBorrow = require('../middleware/ableToBorrow')
+const verifyAdmin = require('../middleware/verifyAdmin')
+const authAdmin = require('../middleware/authAdmin')
 const jwt = require('jsonwebtoken');
+const UserBorrowedBook = require('../models/PreviousUserBorrowedBookModel')
+
 
 
 const getAccessTokenFromDB = async (userId) => {
@@ -19,8 +20,6 @@ const getAccessTokenFromDB = async (userId) => {
   };
   
   
-
-
 
 CardRoute.get('/card/view_book/:id', verify, ableToBorrow, asyncHandler(async (req, res, next) => {
     try {
@@ -70,20 +69,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     
       const {id} = req.params
     
-      const toSave = await  Card.findById({_id: id})
-    
-      let bookOne = toSave.bookOne
-      let bookTwo = toSave.bookTwo
-      let bookThree = toSave.bookThree
-      let borrower = toSave.borrower
-    
-      await UserDeletedBook.create({
-        bookOne,
-        bookTwo,
-        bookThree,
-        borrower
-      })
-    
+        
       await Card.findByIdAndDelete(id)
       res.json({msg: "books on card successfully deleted.."})
     
@@ -172,8 +158,50 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
       }
     }))
     
-    
+
+    CardRoute.get('/card/admin_view_borrowed_books', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+        
+      try {
+         
+        const borrowedBooks = await UserBorrowedBook.find().sort({_id: -1})
+
+        res.json({borrowedBooks})
+
+      } catch (error) {
+        next(error)
+      }
 
 
+    }))
+
+
+    CardRoute.get('/card/show_single_card/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+      try {
+        const {id} = req.params
+
+       const result = await UserBorrowedBook.findById({_id: id})
+
+       res.json({result})
+        
+      } catch (error) {
+        next(error)
+      }
+    }))
+
+
+    CardRoute.get('/card/show_owner_of_card/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+      try {
+
+        const {id} = req.params
+
+        const result = await UserBorrowedBook.findOne({Borrower: id})
+
+        res.json({result})
+
+        
+      } catch (error) {
+        next(error)
+      }
+    }))
 
 module.exports = CardRoute

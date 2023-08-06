@@ -5,7 +5,7 @@ const verify = require('../middleware/verify');
 const ableToBorrow = require('../middleware/ableToBorrow');
 const asyncHandler = require('express-async-handler');
 const ScheduledTask = require('../models/ScheduleTaskModel')
-const fs = require('fs')
+const UserBorrowedBook = require('../models/PreviousUserBorrowedBookModel')
 
 
 const bookAccessToken = (horcrux) => {
@@ -21,7 +21,7 @@ const getAccessTokenFromDB = async (userId) => {
   }
 };
 
-// , {}, { sort: { createdAt: -1 } }
+
 
 
 const canBorrow = async (req, res, next) => {
@@ -68,6 +68,21 @@ BorrowRoute.post('/borrow/borrow_books/:id', verify, ableToBorrow, canBorrow, as
    
     let newId = items._id
 
+    let BookOne = items.bookOne
+    let BookTwo = items.bookTwo
+    let BookThree = items.bookThree
+    let Borrower = items.borrower
+
+
+
+    await UserBorrowedBook.create({
+      BookOne,
+      BookTwo,
+      BookThree,
+      Borrower
+
+    })
+
     ruCode(newId)
   
     
@@ -102,51 +117,6 @@ async function ruCode(hmm) {
 
 
 
-
-
-// async function startScheduledTasks() {
-//   try {
-    
-//     const scheduledTasks = await ScheduledTask.find({});
-
-    
-//     for (const task of scheduledTasks) {
-//       ruCode(task.cardId);
-
-//       const mongodbDate = new Date(task.createdAt);
-//    const normalDate = new Date(mongodbDate.toISOString());
-
-
-
-// const newDate = new Date(normalDate.getTime() + 120000); // 60000 milliseconds = 1 minute
-
-// if (newDate > normalDate) {
-//   await Card.findOneAndDelete( task.cardId );
-//         console.log(`successfully deleted`);
-
-
-// } else {
-//   console.log("1 minute cannot be added to the time value.");
-// }
-
-      
-//     }
-
-  
-
-    
-
-//     console.log(1);
-//   } catch (error) {
-//     console.error('Error occurred while starting scheduled tasks:', error);
-//   }
-// }
-
-  
-//   setInterval(startScheduledTasks,60000); 
-
-
-
 async function startScheduledTasks() {
   try {
     const scheduledTasks = await ScheduledTask.find({});
@@ -167,6 +137,7 @@ async function startScheduledTasks() {
         await ScheduledTask.findByIdAndDelete(task._id)
       } else {
         console.log("30 days have not passed since the creation date.");
+        
       }
     }
 
@@ -176,7 +147,7 @@ async function startScheduledTasks() {
   }
 }
 
-// Call the function using setInterval to run every 1 second (1000 milliseconds)
+
 setInterval(startScheduledTasks, 60000);
 
 
