@@ -8,6 +8,10 @@ authorName: {
 authorCountry: {
     type: String,
     required: true
+},
+authorShortBio: {
+    type: String,
+    required: true
 }
 
 }, {
