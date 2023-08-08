@@ -36,9 +36,9 @@ try {
 AuthorRoute.get('/author/show_authors', asyncHandler(async(req, res, next) => {
     try {
         
-        const results = await Author.find()
+        const authors = await Author.find()
 
-        res.json({results})
+        res.json({authors})
 
 
     } catch (error) {
