@@ -22,7 +22,7 @@ mainAdminImage: {
     unique: true,
     required: true
 },
-admin: {
+super: {
     type: Number,
     default: 2
 }

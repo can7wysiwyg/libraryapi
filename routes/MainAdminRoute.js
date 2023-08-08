@@ -114,7 +114,7 @@ cloudinary.config({
 
 MainAdminRoute.get('/mainadmin/user', verifyMainAdmin, asyncHandler(async(req, res) => {
   try{
-    const mainadmin = await MainAdmin.findById(req.mainadmin).select('-password')
+    const mainadmin = await MainAdmin.findById(req.super).select('-password')
     if(!mainadmin) return res.status(400).json({msg: "this admin does not exist d does not exist."})
   
     res.json(mainadmin)
