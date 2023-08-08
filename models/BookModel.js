@@ -34,7 +34,7 @@ bookDescription: {
     required: true
 },
 bookReleaseDate: {
-    type: String,
+    type: Date,
     required: true
 },
 

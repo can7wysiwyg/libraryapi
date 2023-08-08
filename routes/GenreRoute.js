@@ -59,9 +59,9 @@ try {
 GenreRoute.get('/genre/show_all', asyncHandler(async(req, res, next) => {
     try {
 
-        const genre = await Genre.find()
+        const genres = await Genre.find()
         
-        res.json({genre})
+        res.json({genres})
         
     } catch (error) {
         next(error)
