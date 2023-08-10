@@ -193,6 +193,8 @@ BookRoute.delete('/books/delete_book/:id', verifyAdmin, authAdmin, asyncHandler(
     const{id} = req.params
 
     await Book.findByIdAndDelete(id)
+
+    res.json({msg: "book has been deleted"})
     
   } catch (error) {
     next(error)

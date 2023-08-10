@@ -5,6 +5,10 @@ authorName: {
     type: String,
     required: true
 },
+authorImage: {
+type: String,
+
+},
 authorCountry: {
     type: String,
     required: true
