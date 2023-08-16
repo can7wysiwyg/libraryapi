@@ -6,6 +6,8 @@ const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
 const fs = require('fs')
+const verifyMainAdmin = require('../middleware/verifyMainAdmin')
+const mainAdmin = require('../middleware/mainAdmin')
 const verifyAdmin = require("../middleware/verifyAdmin");
 const authAdmin = require('../middleware/authAdmin')
 
@@ -18,7 +20,7 @@ cloudinary.config({
 
   
 
-AdminRoute.post('/admin/register', asyncHandler(async(req, res, next) => {
+AdminRoute.post('/admin/register', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
 
 try {
 
