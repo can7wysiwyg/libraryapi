@@ -2,6 +2,7 @@ const AdminRoute = require('express').Router()
 const asyncHandler = require('express-async-handler')
 const Admin = require("../models/AdminModel")
 const User = require('../models/UserModel')
+const Librarian = require('../models/LibrarianModel')
 const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
@@ -24,9 +25,9 @@ AdminRoute.post('/admin/register', verifyMainAdmin, mainAdmin, asyncHandler(asyn
 
 try {
 
-    const {fullname, email, password } = req.body
+    const {uniqueName, email, password } = req.body
 
-    if(!fullname) res.json({msg: "fullname cannot be blank.."})
+    if(!uniqueName) res.json({msg: "unique name cannot be blank.."})
 
     if(!email) res.json({msg: "email cannot be blank.."})
 
@@ -36,41 +37,21 @@ try {
     const emailExists = await  Admin.findOne({ email });
 
     if (emailExists) {
-      res.json({ msg: "The email exists, please user another one or login" });
+      res.json({ msg: "The email exists" });
     }
 
-    if (!req.files || !req.files.adminImage) {
-        return res.status(400).json({ message: 'No file uploaded' });
-      }
-    
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-    
-      const file = req.files.adminImage;
-    
-      cloudinary.uploader.upload(file.tempFilePath, {
-        folder: 'libraryImages',
-        width: 150,
-        height: 150,
-        crop: "fill"
-      }, async (err, result) => {
-        if (err) {
-          console.error("Error uploading user image:", err);
-          return res.status(500).json({ msg: "Failed to upload user image" });
-        }
-    
-        removeTmp(file.tempFilePath);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+  
     
         await Admin.create({
-          fullname,
+          uniqueName,
           email,
-          adminImage: result.secure_url,
           password: hashedPassword
         });
     
-        res.json({ msg: "Admin account created successfully created!" });
-      });
-
+        res.json({ msg: "Librarian account created successfully created!" });
+      
 
 
     
@@ -79,6 +60,18 @@ try {
 }
 
 }))
+
+AdminRoute.get('/admin/show_to_main', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
+  try {
+    const result = await Admin.find()
+
+    res.json({result})
+    
+  } catch (error) {
+    next(error)
+  }
+}))
+
 
 AdminRoute.post("/admin/login", asyncHandler(async(req, res) => {
     const { email, password } = req.body;
@@ -137,6 +130,64 @@ AdminRoute.get('/admin/user',verifyAdmin, asyncHandler(async(req, res) => {
     }
   
   
+  }))
+
+  AdminRoute.post('/admin/update_info', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+    try {
+
+      const {fullname, personalEmail, home, phoneNumber, gender} = req.body
+
+      if(!fullname) res.json({msg: "fullname cannot be empty"})
+
+      if(!personalEmail) res.json({msg: "personal email cannot be empty"})
+
+      if(!home) res.json({msg: "home cannot be empty"})
+
+      if(!phoneNumber) res.json({msg: "phone number cannot be empty"})
+
+      if(!gender) res.json({msg: "gender cannot be empty"})
+
+
+      if (!req.files || !req.files.adminImage) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+    
+    
+      const file = req.files.adminImage;
+    
+      cloudinary.uploader.upload(file.tempFilePath, {
+        folder: 'libraryImages',
+        width: 150,
+        height: 150,
+        crop: "fill"
+      }, async (err, result) => {
+        if (err) {
+          console.error("Error uploading user image:", err);
+          return res.status(500).json({ msg: "Failed to upload user image" });
+        }
+    
+        removeTmp(file.tempFilePath);
+
+await Librarian.create({
+  fullname,
+  personalEmail,
+  home,
+  phoneNumber,
+  gender,
+  adminImage: result.secure_url
+
+
+})
+
+
+res.json({msg: "successfully entered your information..."})
+    });
+
+
+      
+    } catch (error) {
+      next(error)
+    }
   }))
 
 
