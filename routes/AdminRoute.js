@@ -132,7 +132,7 @@ AdminRoute.get('/admin/user',verifyAdmin, asyncHandler(async(req, res) => {
   
   }))
 
-  AdminRoute.post('/admin/update_info', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+  AdminRoute.post('/admin/update_info', verifyAdmin, asyncHandler(async(req, res, next) => {
     try {
 
       const {fullname, personalEmail, home, phoneNumber, gender} = req.body
@@ -148,12 +148,12 @@ AdminRoute.get('/admin/user',verifyAdmin, asyncHandler(async(req, res) => {
       if(!gender) res.json({msg: "gender cannot be empty"})
 
 
-      if (!req.files || !req.files.adminImage) {
+      if (!req.files || !req.files.librarianImage) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
     
     
-      const file = req.files.adminImage;
+      const file = req.files.librarianImage;
     
       cloudinary.uploader.upload(file.tempFilePath, {
         folder: 'libraryImages',
@@ -174,16 +174,29 @@ await Librarian.create({
   home,
   phoneNumber,
   gender,
-  adminImage: result.secure_url
+  librarianImage: result.secure_url
 
 
 })
 
 
-res.json({msg: "successfully entered your information..."})
+res.json({msg: "successfully entered your information. You Will be logged out as we will be reviewing your info. "})
     });
 
 
+      
+    } catch (error) {
+      next(error)
+    }
+  }))
+
+
+  AdminRoute.get('/admin/view_librarian', asyncHandler(async(req, res, next) => {
+    try {
+
+      const result = await Librarian.find()
+
+      res.json({result})
       
     } catch (error) {
       next(error)
