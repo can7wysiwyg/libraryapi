@@ -21,7 +21,7 @@ cloudinary.config({
 
     try {
 
-        const {fullname, email, phoneNumber, location, idNumber, age, password} = req.body
+        const {fullname, email, phoneNumber, location, idNumber, DOB, password} = req.body
 
  if(!fullname) res.json({msg: "fullname cannot be empty"})
 
@@ -33,7 +33,7 @@ cloudinary.config({
 
  if(!idNumber) res.json({msg: "id number cannot be empty"})
 
- if(!age) res.json({msg: "age cannot be empty"})
+ if(!DOB) res.json({msg: "age cannot be empty"})
 
  if(!password) res.json({msg: "password cannot be empty"})
 
@@ -70,7 +70,7 @@ cloudinary.config({
           fullname,
           email,
           phoneNumber,
-          age,
+          DOB,
           location,
           idNumber,
           userImage: result.secure_url,

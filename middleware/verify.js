@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/UserModel')
 
 const verify = asyncHandler(async (req, res, next) => {
-  let token
+  let usertoken
 
   if (
     req.headers.authorization &&
@@ -11,10 +11,10 @@ const verify = asyncHandler(async (req, res, next) => {
   ) {
     try {
       // Get token from header
-      token = req.headers.authorization.split(' ')[1]
+      usertoken = req.headers.authorization.split(' ')[1]
 
       // Verify token
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_USER)
+      const decoded = jwt.verify(usertoken, process.env.ACCESS_TOKEN_USER)
 
       // Get user from the token
       req.user = await User.findById(decoded.id).select('-password')
@@ -27,7 +27,7 @@ const verify = asyncHandler(async (req, res, next) => {
     }
   }
 
-  if (!token) {
+  if (!usertoken) {
     res.status(401)
     throw new Error('Not authorized, no token')
   }

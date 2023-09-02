@@ -24,7 +24,7 @@ const UserSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    age: {
+    DOB: {
       type: String,
       required: true,
     },
@@ -36,12 +36,7 @@ const UserSchema = mongoose.Schema(
     idNumber: {
       type: String,
       required: true,
-      validate: {
-        validator: function (v) {
-          return v.length <= 8;
-        },
-        message: props => `ID number must not exceed 8 characters!`
-      }
+      unique: true
     },
     
     permToBorrow: {
