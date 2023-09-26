@@ -53,6 +53,8 @@ BorrowRoute.post('/borrow/borrow_books/:id', verify, ableToBorrow, canBorrow, as
   const { bookOne, bookTwo, bookThree, borrower } = req.body;
   const ccessToken = bookAccessToken({ books: [bookOne, bookTwo, bookThree], borrower });
 
+  if(!bookOne) res.json({msg: "there should be at least be a book.."}) 
+
   try {
     
   const items = await Card.create({
@@ -127,7 +129,7 @@ async function startScheduledTasks() {
       const mongodbDate = new Date(task.createdAt);
       const normalDate = new Date(mongodbDate.toISOString());
 
-      console.log(normalDate);
+      // console.log(normalDate);
 
       const newDate = new Date(normalDate.getTime() + 2592000000); // 2592000000 milliseconds = 30 days
 

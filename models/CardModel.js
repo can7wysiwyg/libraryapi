@@ -4,6 +4,7 @@ const CardSchema = mongoose.Schema({
 
     bookOne: {
         type: String,
+        required: true
         
     },
     bookTwo: {
