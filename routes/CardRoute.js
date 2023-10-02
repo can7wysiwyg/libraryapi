@@ -205,7 +205,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     
 
 
-    CardRoute.get('/card/show_owner_of_card/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+    CardRoute.get('/card/show_owner_books/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
       try {
 
         const {id} = req.params

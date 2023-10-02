@@ -201,12 +201,39 @@ UserRoute.get('/userroute/user',verify, asyncHandler(async(req, res) => {
           res.json({ msg: "succesfully updated" });
         })
       );
+
+
+
+UserRoute.get('/userroute/show_users', asyncHandler(async(req, res, next) => {
+  try {
+
+    const users = await User.find()
+
+    res.json({users})
+    
+  } catch (error) {
+    next(error)
+  }
+}))  
+
+
+UserRoute.get('/userroute/show_user/:id', asyncHandler(async(req, res, next) => {
+
+  try {
+
+    const{id} = req.params
+
+    const user = await User.findById({_id: id})
+
+    res.json({user})
+    
+  } catch (error) {
+    next(error)
+  }
+
+}))
       
       
-
-  
-  
-
 
   const createAccessToken = (user) =>{
     return jwt.sign(user, process.env.ACCESS_TOKEN_USER, {expiresIn: '7d'})
