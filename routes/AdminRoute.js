@@ -222,6 +222,25 @@ try {
 }))
 
 
+AdminRoute.put('/admin/update_suspend_or_not_suspend_user/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+  try {
+      const {id} = req.params
+  
+      await User.findByIdAndUpdate(id, req.body, {new: true})
+  
+      res.json({msg: "task has been successfull.."})
+  
+      
+  } catch (error) {
+      next(error)
+  }
+  
+  }))
+  
+
+
+
 AdminRoute.delete('/admin/delete_member/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
 
     try {

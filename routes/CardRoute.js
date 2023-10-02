@@ -175,11 +175,11 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
 
 
-    CardRoute.get('/card/show_single_card/:id', verifyAdmin, authAdmin,  asyncHandler(async(req, res, next) => {
+    CardRoute.get('/card/show_user_borrowed_book/:id', verifyAdmin, authAdmin,  asyncHandler(async(req, res, next) => {
       try {
         const {id} = req.params
 
-       const result = await UserBorrowedBook.findById({_id: id})
+       const result = await UserBorrowedBook.findOne({Borrower: id})
 
        res.json({result})
         
