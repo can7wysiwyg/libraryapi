@@ -1,6 +1,7 @@
 const CardRoute = require('express').Router()
 const Card = require('../models/CardModel')
 const asyncHandler = require('express-async-handler')
+const User = require('../models/UserModel')
 const verify = require('../middleware/verify')
 const ableToBorrow = require('../middleware/ableToBorrow')
 const verifyAdmin = require('../middleware/verifyAdmin')
@@ -88,21 +89,32 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     
     CardRoute.delete('/card/delete_book_two/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
       try {
-        const {id} = req.params
-    
-        const query = { _id: id }
-    
-        const update = { $unset: { 'bookTwo': '' } };
-    
-        Card.updateOne(query, update).then((results) => {
-          if(results) {
-            res.json({msg: "successfully deleted"})
-          }
-        })
+
+        const { id } = req.params;
+        const Owner = await User(req.user)
+
+        const user = Owner._id.toString()
+        const getOwner = await Card.findOne({_id: id})
+         
+       const see = getOwner.borrower
+
+       if( user !== see ) {
+        res.json({msg: "u do not have access"})
+       }
         
+        
+        const updatedValue = ""; // Value you want to set 'bookOne' to
     
+        const filter = { _id: id };
+        const update = { $set: { bookTwo: updatedValue } };
     
+        const updatedCard = await Card.findOneAndUpdate(filter, update, { new: true });
     
+        if (updatedCard) {
+          res.json({ msg: "Successfully updated 'bookTwo' to null" });
+        } else {
+          res.json({ msg: "No document was found or updated" });
+        }
         
       } catch (error) {
         next(error)
@@ -112,18 +124,31 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     
     CardRoute.delete('/card/delete_book_three/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
       try {
-        const {id} = req.params
-    
-        const query = { _id: id }
-    
-        const update = { $unset: { 'bookThree': '' } };
-    
-        Card.updateOne(query, update).then((results) => {
-          if(results) {
-            res.json({msg: "successfully deleted"})
-          }
-        })
+        const { id } = req.params;
+        const Owner = await User(req.user)
+
+        const user = Owner._id.toString()
+        const getOwner = await Card.findOne({_id: id})
+         
+       const see = getOwner.borrower
+
+       if( user !== see ) {
+        res.json({msg: "u do not have access"})
+       }
         
+        
+        const updatedValue = ""; // Value you want to set 'bookOne' to
+    
+        const filter = { _id: id };
+        const update = { $set: { bookThree: updatedValue } };
+    
+        const updatedCard = await Card.findOneAndUpdate(filter, update, { new: true });
+    
+        if (updatedCard) {
+          res.json({ msg: "Successfully updated 'bookThree' to null" });
+        } else {
+          res.json({ msg: "No document was found or updated" });
+        }
     
     
     
@@ -132,33 +157,43 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
         next(error)
       }
     }))
-    
-    
-    
-    CardRoute.delete('/card/delete_book_one/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
+
+
+    CardRoute.put('/card/update_book_one/:id', verify, ableToBorrow, asyncHandler(async (req, res, next) => {
       try {
-        const {id} = req.params
-    
-        const query = { _id: id }
-    
-        const update = { $unset: { 'bookOne': '' } };
-    
-        Card.updateOne(query, update).then((results) => {
-          if(results) {
-            res.json({msg: "successfully deleted"})
-          }
-        })
+        const { id } = req.params;
+        const Owner = await User(req.user)
+
+        const user = Owner._id.toString()
+        const getOwner = await Card.findOne({_id: id})
+         
+       const see = getOwner.borrower
+
+       if( user !== see ) {
+        res.json({msg: "u do not have access"})
+       }
         
-    
-    
-    
         
+        const updatedValue = ""; // Value you want to set 'bookOne' to
+    
+        const filter = { _id: id };
+        const update = { $set: { bookOne: updatedValue } };
+    
+        const updatedCard = await Card.findOneAndUpdate(filter, update, { new: true });
+    
+        if (updatedCard) {
+          res.json({ msg: "Successfully updated 'bookOne' to null" });
+        } else {
+          res.json({ msg: "No document was found or updated" });
+        }
       } catch (error) {
-        next(error)
+        next(error);
       }
-    }))
+    }));
     
 
+    
+   
     CardRoute.get('/card/admin_view_borrowed_books', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
         
       try {
@@ -210,7 +245,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
 
         const {id} = req.params
 
-        const result = await UserBorrowedBook.findOne({Borrower: id})
+        const result = await Card.findOne({borrower: id})
 
         res.json({result})
 

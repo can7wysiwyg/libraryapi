@@ -41,7 +41,7 @@ const UserSchema = mongoose.Schema(
     
     permToBorrow: {
       type: Boolean,
-      default: false
+      default: true
 
     },
     role: {

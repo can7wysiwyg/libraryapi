@@ -198,7 +198,7 @@ UserRoute.get('/userroute/user',verify, asyncHandler(async(req, res) => {
             }
           );
       
-          res.json({ msg: "succesfully updated" });
+          res.json({ msg: "password has been succesfully updated! please log in..." });
         })
       );
 
