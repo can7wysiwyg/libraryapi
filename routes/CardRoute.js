@@ -1,7 +1,8 @@
 const CardRoute = require('express').Router()
 const Card = require('../models/CardModel')
+const ScheduledTask = require('../models/ScheduleTaskModel')
 const asyncHandler = require('express-async-handler')
-const User = require('../models/UserModel')
+const User = require('../models/UserModel') 
 const verify = require('../middleware/verify')
 const ableToBorrow = require('../middleware/ableToBorrow')
 const verifyAdmin = require('../middleware/verifyAdmin')
@@ -69,11 +70,26 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     try {
     
       const {id} = req.params
-    
-        
+     const checks = await Card.findOne({_id: id})
+     const getCardFromTasks = await ScheduledTask.findOne({cardId: id})
+     const scheduleId = getCardFromTasks._id.toString()
+
+     
+     
+     
+
+     if( checks.bookOne === "" && checks.bookTwo === "" && checks.bookThree === "") {
+
       await Card.findByIdAndDelete(id)
+      await ScheduledTask.findByIdAndDelete(scheduleId)
       res.json({msg: "books on card successfully deleted.."})
-    
+
+     }
+
+     res.json({msg: "you will only be able to borrow once all books you borrowed have been returned"})
+        
+      
+      
     
     
     
@@ -87,7 +103,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
     
     
-    CardRoute.delete('/card/delete_book_two/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
+    CardRoute.put('/card/delete_book_two/:id', verify,  asyncHandler(async(req, res, next) => {
       try {
 
         const { id } = req.params;
@@ -111,7 +127,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
         const updatedCard = await Card.findOneAndUpdate(filter, update, { new: true });
     
         if (updatedCard) {
-          res.json({ msg: "Successfully updated 'bookTwo' to null" });
+          res.json({ msg: "Successfully returned " });
         } else {
           res.json({ msg: "No document was found or updated" });
         }
@@ -122,7 +138,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
     
     
-    CardRoute.delete('/card/delete_book_three/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
+    CardRoute.put('/card/delete_book_three/:id', verify, asyncHandler(async(req, res, next) => {
       try {
         const { id } = req.params;
         const Owner = await User(req.user)
@@ -145,7 +161,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
         const updatedCard = await Card.findOneAndUpdate(filter, update, { new: true });
     
         if (updatedCard) {
-          res.json({ msg: "Successfully updated 'bookThree' to null" });
+          res.json({ msg: "Successfully returned" });
         } else {
           res.json({ msg: "No document was found or updated" });
         }
@@ -159,7 +175,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
 
 
-    CardRoute.put('/card/update_book_one/:id', verify, ableToBorrow, asyncHandler(async (req, res, next) => {
+    CardRoute.put('/card/update_book_one/:id', verify,  asyncHandler(async (req, res, next) => {
       try {
         const { id } = req.params;
         const Owner = await User(req.user)
@@ -182,7 +198,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
         const updatedCard = await Card.findOneAndUpdate(filter, update, { new: true });
     
         if (updatedCard) {
-          res.json({ msg: "Successfully updated 'bookOne' to null" });
+          res.json({ msg: "Successfully returned" });
         } else {
           res.json({ msg: "No document was found or updated" });
         }
