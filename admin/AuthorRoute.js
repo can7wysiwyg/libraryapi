@@ -110,33 +110,6 @@ AuthorRoute.put('/author/update_image/:id', verifyAdmin, authAdmin, asyncHandler
 
 }))
 
-AuthorRoute.get('/author/show_authors', asyncHandler(async(req, res, next) => {
-    try {
-        
-        const authors = await Author.find()
-
-        res.json({authors})
-
-
-    } catch (error) {
-        next(error)
-    }
-}))
-
-AuthorRoute.get('/author/show_single/:id', asyncHandler(async(req, res, next) => {
-    try {
-
-        const {id} = req.params
-
-        const result = await Author.findOne({_id: id})
-
-        res.json({result})
-        
-    } catch (error) {
-        next(error)
-    }
-}))
-
 
 AuthorRoute.put('/author/edit_author/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
     try {

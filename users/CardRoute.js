@@ -5,10 +5,7 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/UserModel') 
 const verify = require('../middleware/verify')
 const ableToBorrow = require('../middleware/ableToBorrow')
-const verifyAdmin = require('../middleware/verifyAdmin')
-const authAdmin = require('../middleware/authAdmin')
 const jwt = require('jsonwebtoken');
-const UserBorrowedBook = require('../models/PreviousUserBorrowedBookModel')
 
 
 
@@ -210,36 +207,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
 
     
    
-    CardRoute.get('/card/admin_view_borrowed_books', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
-        
-      try {
-         
-        const borrowedBooks = await UserBorrowedBook.find().sort({_id: -1})
-
-        res.json({borrowedBooks})
-
-      } catch (error) {
-        next(error)
-      }
-
-
-    }))
-
-
-    CardRoute.get('/card/show_user_borrowed_book/:id', verifyAdmin, authAdmin,  asyncHandler(async(req, res, next) => {
-      try {
-        const {id} = req.params
-
-       const result = await UserBorrowedBook.findOne({Borrower: id})
-
-       res.json({result})
-        
-      } catch (error) {
-        next(error)
-      }
-    }))
-
-
+    
     CardRoute.get('/card/show_to_user/:id', verify, ableToBorrow, asyncHandler(async (req, res, next) => {
       try {
         const { id } = req.params;

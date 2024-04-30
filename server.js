@@ -12,8 +12,12 @@ const UserRoute = require('./users/UserRoute')
 const BorrowRoute = require('./users/BorrowRoute')
 const GenreRoute = require('./admin/GenreRoute')
 const BookRoute = require('./routes/BooksRoute')
-const CardRoute = require('./routes/CardRoute')
+const CardRoute = require('./users/CardRoute')
 const AuthorRoute = require('./admin/AuthorRoute')
+const ShowAuthorsRoute = require('./routes/ShowAuthorsRoute')
+const ShowGenreRoute = require('./routes/ShowGenresRoute')
+const AdminBookRoute = require('./admin/AdminBookRoute')
+const AdminCardRoute = require('./admin/AdminCardRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -47,7 +51,10 @@ app.use(GenreRoute)
 app.use(BookRoute)
 app.use(CardRoute)
 app.use(AuthorRoute)
-
+app.use(ShowAuthorsRoute)
+app.use(ShowGenreRoute)
+app.use(AdminBookRoute)
+app.use(AdminCardRoute)
 
 
 app.listen(port, () => {
