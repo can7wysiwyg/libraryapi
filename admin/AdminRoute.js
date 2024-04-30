@@ -96,10 +96,10 @@ AdminRoute.post("/admin/login", asyncHandler(async(req, res) => {
       jwt.verify(refreshtoken, process.env.REFRESH_TOKEN_ADMIN, (err, admin) =>{
         if(err) return res.status(400).json({msg: "Email the admin for help.."})
     
-        const accesstoken = createAccessToken({id: admin.id})
+        const librarianToken = createAccessToken({id: admin.id})
         
     
-        res.json({accesstoken}) })
+        res.json({librarianToken}) })
 
 
       
@@ -112,12 +112,12 @@ AdminRoute.post("/admin/login", asyncHandler(async(req, res) => {
 }))
 
 
-AdminRoute.get('/admin/user',verifyAdmin, asyncHandler(async(req, res) => {
+AdminRoute.get('/admin/librarian',verifyAdmin, asyncHandler(async(req, res) => {
   try{
     const admin = await Admin.findById(req.admin).select('-password')
     if(!admin) return res.status(400).json({msg: "this admin does not exist d does not exist."})
   
-    res.json(admin)
+    res.json({admin})
   
   
   

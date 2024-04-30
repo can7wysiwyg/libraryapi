@@ -96,10 +96,10 @@ cloudinary.config({
       jwt.verify(refreshtoken, process.env.REFRESH_TOKEN_MAIN_ADMIN, (err, mainadmin) =>{
         if(err) return res.status(400).json({msg: "Email the admin for help.."})
     
-        const accesstoken = createAccessToken({id: mainadmin.id})
+        const supertoken = createAccessToken({id: mainadmin.id})
         
     
-        res.json({accesstoken}) })
+        res.json({supertoken}) })
 
 
       
@@ -112,7 +112,7 @@ cloudinary.config({
 }))
 
 
-MainAdminRoute.get('/mainadmin/user', verifyMainAdmin, asyncHandler(async(req, res) => {
+MainAdminRoute.get('/mainadmin/mainadmin', verifyMainAdmin, asyncHandler(async(req, res) => {
   try{
     const mainadmin = await MainAdmin.findById(req.super).select('-password')
     if(!mainadmin) return res.status(400).json({msg: "this admin does not exist d does not exist."})

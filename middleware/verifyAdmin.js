@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler')
 const Admin = require('../models/AdminModel')
 
 const verifyAdmin = asyncHandler(async (req, res, next) => {
-  let token
+  let librarianToken
 
   if (
     req.headers.authorization &&
@@ -11,10 +11,10 @@ const verifyAdmin = asyncHandler(async (req, res, next) => {
   ) {
     try {
       // Get token from header
-      token = req.headers.authorization.split(' ')[1]
+      librarianToken = req.headers.authorization.split(' ')[1]
 
       // Verify token
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_ADMIN)
+      const decoded = jwt.verify(librarianToken, process.env.ACCESS_TOKEN_ADMIN)
 
       // Get user from the token
       req.admin = await Admin.findById(decoded.id).select('-password')
@@ -27,7 +27,7 @@ const verifyAdmin = asyncHandler(async (req, res, next) => {
     }
   }
 
-  if (!token) {
+  if (!librarianToken) {
     res.status(401)
     throw new Error('Not authorized, no token')
   }
