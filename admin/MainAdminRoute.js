@@ -117,7 +117,7 @@ MainAdminRoute.get('/mainadmin/mainadmin', verifyMainAdmin, asyncHandler(async(r
     const mainadmin = await MainAdmin.findById(req.super).select('-password')
     if(!mainadmin) return res.status(400).json({msg: "this admin does not exist d does not exist."})
   
-    res.json(mainadmin)
+    res.json({mainadmin})
   
   
   

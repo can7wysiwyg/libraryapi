@@ -24,7 +24,7 @@ mainAdminImage: {
 },
 super: {
     type: Number,
-    default: 2
+    default: 18
 }
 
 

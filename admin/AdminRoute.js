@@ -11,6 +11,7 @@ const verifyMainAdmin = require('../middleware/verifyMainAdmin')
 const mainAdmin = require('../middleware/mainAdmin')
 const verifyAdmin = require("../middleware/verifyAdmin");
 const authAdmin = require('../middleware/authAdmin')
+const { log } = require('console')
 
 
 cloudinary.config({
@@ -21,7 +22,7 @@ cloudinary.config({
 
   
 
-AdminRoute.post('/admin/register', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
+AdminRoute.post('/admin/register',  asyncHandler(async(req, res, next) => {
 
 try {
 
@@ -118,6 +119,8 @@ AdminRoute.get('/admin/librarian',verifyAdmin, asyncHandler(async(req, res) => {
     if(!admin) return res.status(400).json({msg: "this admin does not exist d does not exist."})
   
     res.json({admin})
+
+    
   
   
   
