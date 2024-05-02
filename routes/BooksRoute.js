@@ -33,7 +33,7 @@ BookRoute.get('/books/single_book/:id', asyncHandler(async(req, res, next) => {
 
     const {id} = req.params
 
-    const book = await Book.findOne({_id: id})
+    const book = await Book.findById({_id: id})
    
     res.json({book})
     
@@ -42,11 +42,6 @@ BookRoute.get('/books/single_book/:id', asyncHandler(async(req, res, next) => {
   }
 }))
 
-BookRoute.get('/books/show_author_books/:id', asyncHandler(async(req, res) => {
-  await Book.find({bookAuthor : req.params.id }).then((books) =>
-      res.json({ books })
-    );
-}))
 
 
 BookRoute.get('/books/show_according_to_genre/gnr', asyncHandler(async(req, res) => {

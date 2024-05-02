@@ -60,10 +60,12 @@ cloudinary.config({
           // Delete the audio and image files from the temporary uploads folder
           fs.unlinkSync(req.files.bookFile.tempFilePath);
           fs.unlinkSync(req.files.bookImage.tempFilePath);
+
+          console.log(bookCol)
       
           res.json({
             msg: 'Audio and image files uploaded successfully',
-            audio: bookCol,
+            
           });
       
     
@@ -77,26 +79,85 @@ cloudinary.config({
     
     }))
     
+
     
-    AdminBookRoute.put('/adminbook/edit_book/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+
+
+AdminBookRoute.put('/adminbook/update_book_title/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+
+  try {
+  
+    const{id} = req.params
+  
+    const {bookTitle} = req.body
+  
+    await Book.updateOne({_id: id}, {$set:{bookTitle}})
+  
+    res.json({msg: "successfully updated.."})
     
-    
+  } catch (error) {
+    next(error)
+  }
+  
+
+
+
+    }))
+
+
+
+    AdminBookRoute.put('/adminbook/update_book_author/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+
       try {
-    
-        const {id} = req.params
-        if(!id) res.json({msg: "no book selected"})
-    
-        await Book.findByIdAndUpdate(id, req.body, {new: true})
-    
-        res.json({msg: "successfully updated"})
+      
+        const{id} = req.params
+      
+        const {bookAuthor} = req.body
+      
+        await Book.updateOne({_id: id}, {$set:{bookAuthor}})
+      
+        res.json({msg: "successfully updated.."})
         
       } catch (error) {
         next(error)
       }
+      
     
     
     
-    }))
+        }))
+
+
+
+        AdminBookRoute.put('/adminbook/update_book_genre/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+
+          try {
+          
+            const{id} = req.params
+          
+            const {bookGenre} = req.body
+          
+            await Book.updateOne({_id: id}, {$set:{bookGenre}})
+          
+            res.json({msg: "successfully updated.."})
+            
+          } catch (error) {
+            next(error)
+          }
+          
+        
+        
+        
+            }))
+        
+    
+    
+    
+    
     
     
     AdminBookRoute.put('/adminbook/update_image/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
