@@ -17,5 +17,24 @@ ShowGenreRoute.get('/showgenre/show_all', asyncHandler(async(req, res, next) => 
 }))
 
 
+ShowGenreRoute.get('/showgenre/show_single/:id', asyncHandler(async(req, res, next) => {
+    try {
+
+        const {id} = req.params
+
+        const genre = await Genre.findById({_id: id})
+        
+        res.json({genre})
+        
+    } catch (error) {
+        next(error)
+    }
+}))
+
+
+
+
+
+
 
 module.exports = ShowGenreRoute

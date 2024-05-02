@@ -153,6 +153,30 @@ AdminBookRoute.put('/adminbook/update_book_title/:id', verifyAdmin, authAdmin, a
         
         
             }))
+
+
+            AdminBookRoute.put('/adminbook/update_book_description/:id', verifyAdmin, authAdmin, asyncHandler(async(req, res, next) => {
+
+
+              try {
+              
+                const{id} = req.params
+              
+                const {bookDescription} = req.body
+              
+                await Book.updateOne({_id: id}, {$set:{bookDescription}})
+              
+                res.json({msg: "successfully updated.."})
+                
+              } catch (error) {
+                next(error)
+              }
+              
+            
+            
+            
+                }))
+               
         
     
     
