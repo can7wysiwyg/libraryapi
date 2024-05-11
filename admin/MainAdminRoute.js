@@ -133,6 +133,63 @@ MainAdminRoute.get('/mainadmin/mainadmin', verifyMainAdmin, asyncHandler(async(r
   }))
 
 
+
+
+  // make librarian routes
+
+MainAdminRoute.post('/mainadmin/register', verifyMainAdmin, mainAdmin,  asyncHandler(async(req, res, next) => {
+
+  try {
+  
+      const {uniqueName, email, password } = req.body
+  
+      if(!uniqueName) res.json({msg: "unique name cannot be blank.."})
+  
+      if(!email) res.json({msg: "email cannot be blank.."})
+  
+      if(!password) res.json({msg: "password cannot be blank.."})
+  
+  
+      const emailExists = await  Admin.findOne({ email });
+  
+      if (emailExists) {
+        res.json({ msg: "The email exists" });
+      }
+  
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+    
+      
+          await Admin.create({
+            uniqueName,
+            email,
+            password: hashedPassword
+          });
+      
+          res.json({ msg: "Librarian account created successfully created!" });
+        
+  
+  
+      
+  } catch (error) {
+      next(error)
+  }
+  
+  }))
+  
+  MainAdminRoute.get('/mainadmin/show_to_main', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
+    try {
+      const result = await Admin.find()
+  
+      res.json({result})
+      
+    } catch (error) {
+      next(error)
+    }
+  }))
+
+
+
   
 
 MainAdminRoute.put('/mainadmin/make_admin/:id', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
@@ -192,6 +249,9 @@ MainAdminRoute.delete('/mainadmin/delete_admin/:id', verifyMainAdmin, mainAdmin,
         next(error)
     }
 }))
+
+
+  
 
 
 

@@ -7,11 +7,8 @@ const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken");
 const fs = require('fs')
-const verifyMainAdmin = require('../middleware/verifyMainAdmin')
-const mainAdmin = require('../middleware/mainAdmin')
 const verifyAdmin = require("../middleware/verifyAdmin");
 const authAdmin = require('../middleware/authAdmin')
-const { log } = require('console')
 
 
 cloudinary.config({
@@ -22,56 +19,6 @@ cloudinary.config({
 
   
 
-AdminRoute.post('/admin/register',  asyncHandler(async(req, res, next) => {
-
-try {
-
-    const {uniqueName, email, password } = req.body
-
-    if(!uniqueName) res.json({msg: "unique name cannot be blank.."})
-
-    if(!email) res.json({msg: "email cannot be blank.."})
-
-    if(!password) res.json({msg: "password cannot be blank.."})
-
-
-    const emailExists = await  Admin.findOne({ email });
-
-    if (emailExists) {
-      res.json({ msg: "The email exists" });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-  
-    
-        await Admin.create({
-          uniqueName,
-          email,
-          password: hashedPassword
-        });
-    
-        res.json({ msg: "Librarian account created successfully created!" });
-      
-
-
-    
-} catch (error) {
-    next(error)
-}
-
-}))
-
-AdminRoute.get('/admin/show_to_main', verifyMainAdmin, mainAdmin, asyncHandler(async(req, res, next) => {
-  try {
-    const result = await Admin.find()
-
-    res.json({result})
-    
-  } catch (error) {
-    next(error)
-  }
-}))
 
 
 AdminRoute.post("/admin/login", asyncHandler(async(req, res) => {
