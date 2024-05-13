@@ -1,6 +1,25 @@
 const mongoose = require('mongoose')
 
 const AdminSchema = mongoose.Schema({
+    fullname: {
+        type: String,
+        unique: true,
+        required: true,
+      },
+    librarianImage: {
+        type: String,
+        unique: true,
+        required: true,
+      },
+    home: {
+        type: String,
+        required: true,
+      },
+      phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
+      },
     email: {
         type: String,
     unique: true,
