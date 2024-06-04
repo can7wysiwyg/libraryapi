@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 
-const UserSchema = mongoose.Schema(
-  {
-    userImage: {
-      type: String,
-      required: true,
-    },
+const UserSchema = mongoose.Schema( {
+  
     fullname: {
       type: String,
       required: true,
@@ -20,14 +16,7 @@ const UserSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    location: {
-      type: String,
-      required: true,
-    },
-    DOB: {
-      type: String,
-      required: true,
-    },
+    
     password: {
       type: String,
       required: true

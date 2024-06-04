@@ -17,6 +17,7 @@ const ShowAuthorsRoute = require('./routes/ShowAuthorsRoute')
 const ShowGenreRoute = require('./routes/ShowGenresRoute')
 const AdminBookRoute = require('./admin/AdminBookRoute')
 const AdminCardRoute = require('./admin/AdminCardRoute')
+const AdminUserRoute = require('./admin/AdminUserRoute')
 
 
 mongoose.connect(process.env.MONGO_DEVT_URL)
@@ -61,7 +62,7 @@ app.use(ShowAuthorsRoute)
 app.use(ShowGenreRoute)
 app.use(AdminBookRoute)
 app.use(AdminCardRoute)
-
+app.use(AdminUserRoute)
 
 app.listen(port, () => {
     console.log(`Your server is now running on port ${port}`);

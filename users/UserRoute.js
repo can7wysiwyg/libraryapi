@@ -4,16 +4,9 @@ const User = require('../models/UserModel')
 const fs = require('fs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const cloudinary = require('cloudinary').v2
 const verify = require('../middleware/verify')
 const ableToBorrow = require('../middleware/ableToBorrow')
 
-
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-  });
 
 
 
@@ -21,7 +14,7 @@ cloudinary.config({
 
     try {
 
-        const {fullname, email, phoneNumber, location, idNumber, DOB, password} = req.body
+        const {fullname, email, phoneNumber,  idNumber,  password} = req.body
 
  if(!fullname) res.json({msg: "fullname cannot be empty"})
 
@@ -29,12 +22,10 @@ cloudinary.config({
 
  if(!phoneNumber) res.json({msg: "phone number cannot be empty"})
 
- if(!location) res.json({msg: "location cannot be empty"})
-
+ 
  if(!idNumber) res.json({msg: "id number cannot be empty"})
 
- if(!DOB) res.json({msg: "age cannot be empty"})
-
+ 
  if(!password) res.json({msg: "password cannot be empty"})
 
 
@@ -44,41 +35,23 @@ cloudinary.config({
       res.json({ msg: "The email exists, please user another one or login" });
     }
 
-    if (!req.files || !req.files.userImage) {
-        return res.status(400).json({ message: 'No file uploaded' });
-      }
     
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
     
-      const file = req.files.userImage;
+      
     
-      cloudinary.uploader.upload(file.tempFilePath, {
-        folder: 'libraryImages',
-        width: 150,
-        height: 150,
-        crop: "fill"
-      }, async (err, result) => {
-        if (err) {
-          console.error("Error uploading  image:", err);
-          return res.status(500).json({ msg: "Failed to upload  image" });
-        }
-    
-        removeTmp(file.tempFilePath);
-    
+      
         await User.create({
           fullname,
           email,
           phoneNumber,
-          DOB,
-          location,
           idNumber,
-          userImage: result.secure_url,
           password: hashedPassword
         });
     
         res.json({ msg: "account created successfully created!" });
-      });
+      
 
 
 
@@ -204,18 +177,6 @@ UserRoute.get('/userroute/user',verify, asyncHandler(async(req, res) => {
 
 
 
-UserRoute.get('/userroute/show_users', asyncHandler(async(req, res, next) => {
-  try {
-
-    const users = await User.find()
-
-    res.json({users})
-    
-  } catch (error) {
-    next(error)
-  }
-}))  
-
 
 UserRoute.get('/userroute/show_user/:id', asyncHandler(async(req, res, next) => {
 
@@ -245,10 +206,3 @@ UserRoute.get('/userroute/show_user/:id', asyncHandler(async(req, res, next) => 
 
 
   module.exports = UserRoute
-
-
-  function removeTmp(filePath) {
-    fs.unlink(filePath, err => {
-      if (err) throw err;
-    });
-  }
