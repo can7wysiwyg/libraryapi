@@ -5,7 +5,7 @@ const fs = require('fs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const verify = require('../middleware/verify')
-const ableToBorrow = require('../middleware/ableToBorrow')
+
 
 
 
@@ -89,10 +89,10 @@ const ableToBorrow = require('../middleware/ableToBorrow')
       jwt.verify(refreshtoken, process.env.REFRESH_TOKEN_USER, (err, user) =>{
         if(err) return res.status(400).json({msg: "Please Login or Register"})
     
-        const accesstoken = createAccessToken({id: user.id})
+        const usertoken = createAccessToken({id: user.id})
         
     
-        res.json({accesstoken}) })
+        res.json({usertoken}) })
 
 
       
@@ -106,12 +106,14 @@ const ableToBorrow = require('../middleware/ableToBorrow')
 
 
 
-UserRoute.get('/userroute/user',verify, asyncHandler(async(req, res) => {
+UserRoute.get('/userroute/user', verify, asyncHandler(async(req, res) => {
     try{
       const user = await User.findById(req.user).select('-password')
       if(!user) return res.status(400).json({msg: "User does not exist."})
     
-      res.json(user)
+      res.json({user})
+
+      
     
     
     }
