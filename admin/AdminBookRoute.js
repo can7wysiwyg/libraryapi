@@ -64,7 +64,7 @@ cloudinary.config({
           console.log(bookCol)
       
           res.json({
-            msg: 'Audio and image files uploaded successfully',
+            msg: 'Book and image files uploaded successfully',
             
           });
       

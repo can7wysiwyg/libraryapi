@@ -62,7 +62,7 @@ CardRoute.get('/card/view_book/:id', verify, ableToBorrow, asyncHandler(async (r
 
 
 
-CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(async(req, res, next) => {
+CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow,  asyncHandler(async(req, res, next) => {
 
     try {
     
@@ -79,8 +79,7 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
 
       await Card.findByIdAndDelete(id)
       await ScheduledTask.findByIdAndDelete(scheduleId)
-      res.json({msg: "books on card successfully deleted.."})
-
+      
      }
 
      res.json({msg: "you will only be able to borrow once all books you borrowed have been returned"})
@@ -100,18 +99,18 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
     
     
-    CardRoute.put('/card/delete_book_two/:id', verify,  asyncHandler(async(req, res, next) => {
+    CardRoute.put('/card/delete_book_two/:id', verify, ableToBorrow,  asyncHandler(async(req, res, next) => {
       try {
-
+        // id of card not book
         const { id } = req.params;
         const Owner = await User(req.user)
 
         const user = Owner._id.toString()
         const getOwner = await Card.findOne({_id: id})
          
-       const see = getOwner.borrower
+       const borrower = getOwner.borrower
 
-       if( user !== see ) {
+       if( user !== borrower ) {
         res.json({msg: "u do not have access"})
        }
         
@@ -135,17 +134,18 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
     
     
-    CardRoute.put('/card/delete_book_three/:id', verify, asyncHandler(async(req, res, next) => {
+    CardRoute.put('/card/delete_book_three/:id', verify, ableToBorrow,  asyncHandler(async(req, res, next) => {
       try {
+        // id of card not book
         const { id } = req.params;
         const Owner = await User(req.user)
 
         const user = Owner._id.toString()
         const getOwner = await Card.findOne({_id: id})
          
-       const see = getOwner.borrower
+       const borrower = getOwner.borrower
 
-       if( user !== see ) {
+       if( user !== borrower ) {
         res.json({msg: "u do not have access"})
        }
         
@@ -172,17 +172,23 @@ CardRoute.delete('/card/delete_book/:id', verify, ableToBorrow, asyncHandler(asy
     }))
 
 
-    CardRoute.put('/card/update_book_one/:id', verify,  asyncHandler(async (req, res, next) => {
+    CardRoute.put('/card/update_book_one/:id', verify, ableToBorrow,  asyncHandler(async (req, res, next) => {
       try {
+       
+        // this is the id of the card not book
         const { id } = req.params;
         const Owner = await User(req.user)
 
+        
+
         const user = Owner._id.toString()
         const getOwner = await Card.findOne({_id: id})
-         
-       const see = getOwner.borrower
 
-       if( user !== see ) {
+      
+         
+       const borrower = getOwner.borrower
+
+       if( user !== borrower ) {
         res.json({msg: "u do not have access"})
        }
         

@@ -23,7 +23,7 @@ AdminCardRoute.get('/admincard/admin_view_borrowed_books', verifyAdmin, authAdmi
   }))
 
 
-  AdminCardRoute.get('/admincard/show_user_borrowed_book/:id', verifyAdmin, authAdmin,  asyncHandler(async(req, res, next) => {
+  AdminCardRoute.get('/admincard/show_user_borrowed_books/:id', verifyAdmin, authAdmin,  asyncHandler(async(req, res, next) => {
     try {
       const {id} = req.params
 

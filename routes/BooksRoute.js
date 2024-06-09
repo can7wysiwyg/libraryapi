@@ -1,14 +1,8 @@
 const BookRoute = require('express').Router()
 const asyncHandler = require('express-async-handler')
 const Book = require('../models/BookModel')
-const cloudinary = require('cloudinary').v2
 const fs = require('fs')
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-  });
 
 
 
@@ -27,6 +21,10 @@ BookRoute.get('/books/show_all', asyncHandler(async(req, res, next) => {
 
 
 }))
+
+
+
+
 
 BookRoute.get('/books/single_book/:id', asyncHandler(async(req, res, next) => {
   try {
@@ -56,9 +54,3 @@ BookRoute.get('/books/show_according_to_genre/gnr', asyncHandler(async(req, res)
 
 
 module.exports = BookRoute
-
-function removeTmp(filePath) {
-    fs.unlink(filePath, err => {
-      if (err) throw err;
-    });
-  }
