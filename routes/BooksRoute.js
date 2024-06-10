@@ -24,6 +24,24 @@ BookRoute.get('/books/show_all', asyncHandler(async(req, res, next) => {
 
 
 
+BookRoute.get('/books/show_all_limited', asyncHandler(async(req, res, next) => {
+
+  try {
+
+    const booksLimited = await Book.find().sort({_id: -1}).limit(9)
+
+    res.json({booksLimited})
+    
+  } catch (error) {
+    next(error)
+  }
+
+
+}))
+
+
+
+
 
 
 BookRoute.get('/books/single_book/:id', asyncHandler(async(req, res, next) => {

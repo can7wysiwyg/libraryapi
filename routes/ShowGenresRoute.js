@@ -17,6 +17,20 @@ ShowGenreRoute.get('/showgenre/show_all', asyncHandler(async(req, res, next) => 
 }))
 
 
+ShowGenreRoute.get('/showgenre/show_limited', asyncHandler(async(req, res, next) => {
+    try {
+
+        const genresLimited = await Genre.find().sort({_id: -1}).limit(3)
+        
+        res.json({genresLimited})
+        
+    } catch (error) {
+        next(error)
+    }
+}))
+
+
+
 ShowGenreRoute.get('/showgenre/show_single/:id', asyncHandler(async(req, res, next) => {
     try {
 
