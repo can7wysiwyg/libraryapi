@@ -35,37 +35,20 @@ cloudinary.config({
       res.json({ msg: "The email exists, please user another one or login" });
     }
 
-    if (!req.files || !req.files.mainAdminImage) {
-        return res.status(400).json({ message: 'No file uploaded' });
-      }
     
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
     
-      const file = req.files.mainAdminImage;
-    
-      cloudinary.uploader.upload(file.tempFilePath, {
-        folder: 'libraryImages',
-        width: 150,
-        height: 150,
-        crop: "fill"
-      }, async (err, result) => {
-        if (err) {
-          console.error("Error uploading  image:", err);
-          return res.status(500).json({ msg: "Failed to upload  image" });
-        }
-    
-        removeTmp(file.tempFilePath);
-    
+      
+      
         await MainAdmin.create({
           fullname,
           email,
-          mainAdminImage: result.secure_url,
           password: hashedPassword
         });
     
         res.json({ msg: "Admin account created successfully created!" });
-      });
+    
     } catch (error) {
         next(error)
     }
@@ -157,9 +140,6 @@ MainAdminRoute.post('/mainadmin/create_librarian', verifyMainAdmin, mainAdmin,  
   
   
 
-        if (!req.files || !req.files.librarianImage) {
-          return res.status(400).json({ message: 'No file uploaded' });
-        }
       
   
   
@@ -172,34 +152,20 @@ MainAdminRoute.post('/mainadmin/create_librarian', verifyMainAdmin, mainAdmin,  
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
     
-      const file = req.files.librarianImage;
+      
 
-
-      cloudinary.uploader.upload(file.tempFilePath, {
-        folder: 'libraryImages',
-        width: 150,
-        height: 150,
-        crop: "fill"
-      }, async (err, result) => {
-        if (err) {
-          console.error("Error uploading  image:", err);
-          return res.status(500).json({ msg: "Failed to upload  image" });
-        }
-    
-        removeTmp(file.tempFilePath);
-    
+      
         await Admin.create({
           fullname,
           email,
           uniqueName,
           phoneNumber,
           home,
-          librarianImage: result.secure_url,
           password: hashedPassword
         });
     
         res.json({ msg: "Admin account created successfully created!" });
-      });
+    
     
           
   

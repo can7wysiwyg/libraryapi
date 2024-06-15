@@ -199,10 +199,10 @@ UserRoute.get('/userroute/show_user/:id', asyncHandler(async(req, res, next) => 
       
 
   const createAccessToken = (user) =>{
-    return jwt.sign(user, process.env.ACCESS_TOKEN_USER, {expiresIn: '7d'})
+    return jwt.sign(user, process.env.ACCESS_TOKEN_USER, {expiresIn: '30d'})
   }
   const createRefreshToken = (user) =>{
-    return jwt.sign(user, process.env.REFRESH_TOKEN_USER, {expiresIn: '7d'})
+    return jwt.sign(user, process.env.REFRESH_TOKEN_USER, {expiresIn: '30d'})
   }
 
 

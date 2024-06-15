@@ -17,11 +17,6 @@ password: {
     unique: true,
     required: true
 },
-mainAdminImage: {
-    type: String,
-    unique: true,
-    required: true
-},
 super: {
     type: Number,
     default: 18

@@ -9,7 +9,7 @@ const AdminSchema = mongoose.Schema({
     librarianImage: {
         type: String,
         unique: true,
-        required: true,
+      
       },
     home: {
         type: String,
