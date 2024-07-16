@@ -1,14 +1,18 @@
 const mongoose = require('mongoose')
 
 const GenreSchema = mongoose.Schema({
+    genreName: {
+        type: String, 
+        required: true,
+        unique: true
+      },
+      subgenres: {
+        type: Array,
+        default: []
+      }
 
-genreName: {
-    type: String,
-    required: true,
-    unique: true
-}
+    },
 
-},
 {
     timestamps: true
 }

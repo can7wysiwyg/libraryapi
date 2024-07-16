@@ -70,5 +70,16 @@ BookRoute.get('/books/show_according_to_genre/gnr', asyncHandler(async(req, res)
 }))
 
 
+BookRoute.get('/books/show_according_to_subgenre/subgnr', asyncHandler(async(req, res) => {
+
+  const books = await Book.find({bookSubGenre: req.query.subgenre})
+ 
+  res.json({books})
+ 
+ 
+ }))
+ 
+
+
 
 module.exports = BookRoute

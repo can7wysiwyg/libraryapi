@@ -17,7 +17,7 @@ cloudinary.config({
 
     try {
     
-        const {bookTitle, bookISBN, bookAuthor, bookGenre, bookDescription, bookReleaseDate} = req.body
+        const {bookTitle, bookISBN, bookAuthor, bookGenre, bookSubGenre, bookDescription, bookReleaseDate} = req.body
     
         if(!bookTitle) res.json({msg: "book title cannot be empty"})
     
@@ -26,6 +26,9 @@ cloudinary.config({
         if(!bookAuthor) res.json({msg: "boook author cannot be empty"})
     
         if(!bookGenre) res.json({msg: "book genre cannot be empty"})
+
+          if(!bookSubGenre) res.json({msg: "book subgenre cannot be empty"})
+   
     
         if(!bookDescription) res.json({msg: "book description cannot be empty"})
     
@@ -48,6 +51,7 @@ cloudinary.config({
             bookAuthor,
             bookDescription,
             bookGenre,
+            bookSubGenre,
             bookISBN,
             bookReleaseDate,
             bookTitle,

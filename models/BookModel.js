@@ -29,6 +29,12 @@ bookGenre: {
     required: true
 },
 
+bookSubGenre: {
+    type: String,
+    required: true
+},
+
+
 bookDescription: {
     type: String,
     required: true
